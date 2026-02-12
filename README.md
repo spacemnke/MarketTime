@@ -2,7 +2,7 @@
 
 A retro terminal-styled macOS menu bar app that shows the NYSE market status with a live countdown timer.
 
-![MarketTime Screenshot](screenshot.png)
+![MarketTime Screenshot](docs/screenshot.png)
 
 ## Features
 
