@@ -1,0 +1,17 @@
+# Build output
+build/
+*.app
+
+# macOS
+.DS_Store
+*.swp
+*~
+
+# Xcode
+*.xcodeproj
+*.xcworkspace
+xcuserdata/
+DerivedData/
+
+# Generated icons (can be rebuilt from iconset)
+*.icns
