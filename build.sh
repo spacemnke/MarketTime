@@ -112,11 +112,23 @@ echo ""
 
 # Create distributable zip (preserving macOS metadata)
 echo "  📦 Creating distributable zip..."
+# Stage app + installer into a temp folder so the zip contains both
+STAGE_DIR="$BUILD_DIR/MarketTime"
+mkdir -p "$STAGE_DIR"
+cp -R "$APP_BUNDLE" "$STAGE_DIR/"
+cp "$SCRIPT_DIR/install.command" "$STAGE_DIR/"
+chmod +x "$STAGE_DIR/install.command"
+
 cd "$BUILD_DIR"
-ditto -c -k --sequesterRsrc --keepParent "$APP_NAME.app" "$APP_NAME.zip"
+ditto -c -k --sequesterRsrc --keepParent "MarketTime" "$APP_NAME.zip"
+rm -rf "MarketTime"
 cd ..
 ZIP_SIZE=$(du -h "$BUILD_DIR/$APP_NAME.zip" | cut -f1)
 echo "  Zip:     $BUILD_DIR/$APP_NAME.zip ($ZIP_SIZE)"
+echo ""
+echo "  The zip contains:"
+echo "    - MarketTime.app"
+echo "    - install.command (double-click to install)"
 echo ""
 echo "  Run now:          open $APP_BUNDLE"
 echo "  Install:          cp -r $APP_BUNDLE /Applications/"

@@ -548,31 +548,25 @@
     <div class="divider"></div>
 
     <!-- ═══ INSTALLATION ═══ -->
-    <p class="section-label">Installation (1 Minute)</p>
+    <p class="section-label">Installation (30 Seconds)</p>
 
     <div class="steps">
       <div class="step">
         <div class="step-content">
           <div class="step-title">Download &amp; Unzip</div>
-          <p class="step-desc">Click the download button above. Unzip <code>MarketTime.zip</code> to get the app.</p>
+          <p class="step-desc">Click the download button above. Unzip <code>MarketTime.zip</code> &mdash; you'll see two items inside: the app and an installer.</p>
         </div>
       </div>
       <div class="step">
         <div class="step-content">
-          <div class="step-title">Move to Applications</div>
-          <p class="step-desc">Drag <code>MarketTime.app</code> into your Applications folder. Or run it from anywhere &mdash; it works either way.</p>
-        </div>
-      </div>
-      <div class="step">
-        <div class="step-content">
-          <div class="step-title">Open It</div>
-          <p class="step-desc">Double-click to launch. On first run, you may need to <strong>right-click &gt; Open</strong> to bypass Gatekeeper since the app is community-signed.</p>
+          <div class="step-title">Run the Installer</div>
+          <p class="step-desc">Double-click <code>install.command</code>. It copies the app to your Applications folder, clears the macOS security flag, and launches it automatically. If prompted, click <strong>Open</strong> to allow it.</p>
         </div>
       </div>
       <div class="step">
         <div class="step-content">
           <div class="step-title">Done</div>
-          <p class="step-desc">MarketTime appears in your menu bar. Click to expand the full dashboard. To start at login, add it in <strong>System Settings &gt; Login Items</strong>.</p>
+          <p class="step-desc">MarketTime appears in your menu bar. Click to expand the full dashboard. To start at login, add it in <strong>System Settings &gt; General &gt; Login Items</strong>.</p>
         </div>
       </div>
     </div>
@@ -598,8 +592,8 @@
     </div>
 
     <div class="faq-item">
-      <p class="faq-q">Why does Gatekeeper warn me?</p>
-      <p class="faq-a">The app is signed with an ad-hoc signature, not notarized through the App Store. Right-click &gt; Open on first launch clears the warning permanently.</p>
+      <p class="faq-q">Why does macOS say the app is damaged?</p>
+      <p class="faq-a">It's not damaged &mdash; macOS quarantines apps downloaded from the internet that aren't notarized through Apple. The included <code>install.command</code> script handles this automatically. If you moved the app manually instead, open Terminal and run: <code>xattr -cr /Applications/MarketTime.app</code></p>
     </div>
 
     <div class="faq-item">
