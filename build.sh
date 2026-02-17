@@ -18,7 +18,6 @@ SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 SOURCES_DIR="$SCRIPT_DIR/Sources"
 RESOURCES_SRC="$SCRIPT_DIR/Resources"
 
-ARCH=$(uname -m)
 MIN_MACOS="13.0"
 
 echo ""
@@ -26,7 +25,7 @@ echo "  ╔═══════════════════════
 echo "  ║       MarketTime Build System        ║"
 echo "  ╚══════════════════════════════════════╝"
 echo ""
-echo "  Architecture:  $ARCH"
+echo "  Architecture:  Universal (arm64 + x86_64)"
 echo "  Min macOS:     $MIN_MACOS"
 echo ""
 
@@ -63,14 +62,14 @@ else
     echo "  [3/5] No iconset found, skipping icon..."
 fi
 
-# Compile Swift sources
-echo "  [4/5] Compiling Swift sources..."
+# Compile Swift sources (Universal Binary: arm64 + x86_64)
+echo "  [4/7] Compiling for arm64..."
 swiftc \
-    -o "$MACOS_DIR/$APP_NAME" \
+    -o "$MACOS_DIR/${APP_NAME}_arm64" \
     -framework Cocoa \
     -framework SwiftUI \
     -framework Combine \
-    -target "${ARCH}-apple-macosx${MIN_MACOS}" \
+    -target "arm64-apple-macosx${MIN_MACOS}" \
     -O \
     -whole-module-optimization \
     "$SOURCES_DIR/main.swift" \
@@ -79,16 +78,46 @@ swiftc \
     "$SOURCES_DIR/MarketStatusView.swift" \
     "$SOURCES_DIR/SevenSegmentDisplay.swift"
 
+echo "  [5/7] Compiling for x86_64..."
+swiftc \
+    -o "$MACOS_DIR/${APP_NAME}_x86_64" \
+    -framework Cocoa \
+    -framework SwiftUI \
+    -framework Combine \
+    -target "x86_64-apple-macosx${MIN_MACOS}" \
+    -O \
+    -whole-module-optimization \
+    "$SOURCES_DIR/main.swift" \
+    "$SOURCES_DIR/AppDelegate.swift" \
+    "$SOURCES_DIR/MarketTimer.swift" \
+    "$SOURCES_DIR/MarketStatusView.swift" \
+    "$SOURCES_DIR/SevenSegmentDisplay.swift"
+
+echo "  [6/7] Creating universal binary..."
+lipo -create \
+    "$MACOS_DIR/${APP_NAME}_arm64" \
+    "$MACOS_DIR/${APP_NAME}_x86_64" \
+    -output "$MACOS_DIR/$APP_NAME"
+rm "$MACOS_DIR/${APP_NAME}_arm64" "$MACOS_DIR/${APP_NAME}_x86_64"
+
 # Code sign with ad-hoc signature
-echo "  [5/5] Signing with ad-hoc signature..."
-codesign --force --sign - "$APP_BUNDLE" 2>/dev/null || true
+echo "  [7/7] Signing with ad-hoc signature..."
+codesign --force --deep --sign - "$APP_BUNDLE"
 
 echo ""
 echo "  ✅  Build successful!"
 echo ""
 echo "  App:     $APP_BUNDLE"
 echo ""
+
+# Create distributable zip (preserving macOS metadata)
+echo "  📦 Creating distributable zip..."
+cd "$BUILD_DIR"
+ditto -c -k --sequesterRsrc --keepParent "$APP_NAME.app" "$APP_NAME.zip"
+cd ..
+ZIP_SIZE=$(du -h "$BUILD_DIR/$APP_NAME.zip" | cut -f1)
+echo "  Zip:     $BUILD_DIR/$APP_NAME.zip ($ZIP_SIZE)"
+echo ""
 echo "  Run now:          open $APP_BUNDLE"
 echo "  Install:          cp -r $APP_BUNDLE /Applications/"
-echo "  Share with others: Zip the $APP_NAME.app and send it"
 echo ""
