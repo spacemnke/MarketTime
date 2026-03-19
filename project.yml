@@ -1,0 +1,63 @@
+name: MarketTime
+options:
+  bundleIdPrefix: com.markettime
+  deploymentTarget:
+    iOS: "16.0"
+    macOS: "13.0"
+  xcodeVersion: "15.0"
+  generateEmptyDirectories: false
+
+settings:
+  base:
+    SWIFT_VERSION: "5.9"
+
+targets:
+
+  # --- macOS Menu Bar App (existing) ---
+  MarketTime:
+    type: application
+    platform: macOS
+    sources:
+      - path: Sources
+    resources:
+      - path: Resources
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.markettime.macos
+        INFOPLIST_FILE: Resources/Info.plist
+        MACOSX_DEPLOYMENT_TARGET: "13.0"
+
+  # --- iOS App ---
+  MarketTimeiOS:
+    type: application
+    platform: iOS
+    sources:
+      - path: MarketTimeiOS
+      - path: Sources/MarketTimer.swift
+      - path: Sources/SevenSegmentDisplay.swift
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.markettime.ios
+        IPHONEOS_DEPLOYMENT_TARGET: "16.0"
+        GENERATE_INFOPLIST_FILE: true
+        INFOPLIST_KEY_UILaunchScreen_Generation: true
+        INFOPLIST_KEY_UISupportedInterfaceOrientations: "UIInterfaceOrientationPortrait"
+        INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad: "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight"
+        INFOPLIST_KEY_CFBundleDisplayName: "MarketTime"
+    dependencies:
+      - target: MarketTimeWidget
+
+  # --- Widget Extension ---
+  MarketTimeWidget:
+    type: app-extension
+    platform: iOS
+    sources:
+      - path: MarketTimeWidget
+      - path: Sources/MarketTimer.swift
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.markettime.ios.widget
+        IPHONEOS_DEPLOYMENT_TARGET: "16.0"
+        GENERATE_INFOPLIST_FILE: true
+        INFOPLIST_KEY_CFBundleDisplayName: "Market Status"
+        INFOPLIST_KEY_NSExtension_NSExtensionPointIdentifier: "com.apple.widgetkit-extension"

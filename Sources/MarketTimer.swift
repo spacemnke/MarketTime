@@ -61,9 +61,12 @@ class MarketTimer: ObservableObject {
     }
 
     func update() {
-        let now = Date()
-        updateTimes(now)
-        updateMarketStatus(now)
+        update(for: Date())
+    }
+
+    func update(for date: Date) {
+        updateTimes(date)
+        updateMarketStatus(date)
     }
 
     // MARK: - Time Display
