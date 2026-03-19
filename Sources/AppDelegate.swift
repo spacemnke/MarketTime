@@ -117,6 +117,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         statusItem.menu = nil // Reset so left-click shows popover again
     }
 
+    func applicationWillTerminate(_ notification: Notification) {
+        updateTimer?.invalidate()
+        updateTimer = nil
+    }
+
     @objc private func quitApp() {
         NSApplication.shared.terminate(nil)
     }
